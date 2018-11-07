@@ -17,4 +17,22 @@ const getDept = () => {
 }
 
 Promise.all([getEmployees(), getComputers(), getDept()])
-.then(response => console.log(response[0]))
+.then(response => {
+  let employees = response[0]
+  let computers = response[1]
+  let departments = response[2]
+  employees.forEach(employee => {
+    departments.forEach(department => {
+      if(employee.department === department.id) {
+        console.log(`${employee.name} works for ${department.name}`)
+      }
+    })
+    computers.forEach(computer => {
+      if(employee.computer === computer.id) {
+        console.log(`${employee.name} uses a ${computer.type} `)
+      }
+    })
+  })
+
+  }
+)
