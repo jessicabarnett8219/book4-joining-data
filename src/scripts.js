@@ -1,10 +1,7 @@
-
-
 const getEmployees= () => {
   return fetch(`http://localhost:8088/employees/`)
   .then(data => data.json())
 }
-
 
 const getComputers = () => {
   return fetch(`http://localhost:8088/computers/`)
@@ -16,6 +13,30 @@ const getDept = () => {
   .then(data => data.json())
 }
 
+const employeeElementMaker = (employee) => {
+let employeeArticle = document.createElement("article")
+employeeArticle.classList.add("employee")
+employeeArticle.innerHTML = `
+  <header class="employee__name">
+    <h1>${employee.name}</h1>
+  </header>
+  <section class="employee__department">
+    <p>Works in the ${employee.department} department</p>
+  </section>
+  <section class="employee__computer">
+    <p>Currently using a ${employee.computer}</p>
+  </section>
+`
+return employeeArticle
+}
+
+const domInjector = (element) => {
+  const output = document.querySelector(".output")
+  output.appendChild(element)
+}
+
+
+
 Promise.all([getEmployees(), getComputers(), getDept()])
 .then(response => {
   let employees = response[0]
@@ -24,15 +45,15 @@ Promise.all([getEmployees(), getComputers(), getDept()])
   employees.forEach(employee => {
     departments.forEach(department => {
       if(employee.department === department.id) {
-        console.log(`${employee.name} works for ${department.name}`)
+        employee.department = department.name
       }
     })
     computers.forEach(computer => {
       if(employee.computer === computer.id) {
-        console.log(`${employee.name} uses a ${computer.type} `)
+        employee.computer = computer.type
       }
     })
-  })
-
+    domInjector(employeeElementMaker(employee))
+    })
   }
 )
